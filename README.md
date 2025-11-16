@@ -44,7 +44,7 @@ You need to set up the necessary credentials in n8n for external connections: / 
 
 ## 🚀 How to Use / วิธีการใช้งาน
 
-1.  **Import Workflow:** Copy the content of this `job-tts-workflow.json` file and **Import** it into your n8n Editor. / คัดลอกเนื้อหาทั้งหมดในไฟล์ `my-tts-workflow.json` นี้ ไปวาง (Import) ใน n8n Editor.
+1.  **Import Workflow:** Copy the content of this `my-tts-workflow.json` file and **Import** it into your n8n Editor. / คัดลอกเนื้อหาทั้งหมดในไฟล์ `my-tts-workflow.json` นี้ ไปวาง (Import) ใน n8n Editor.
 2.  **Connect Credentials:** Update the ElevenLabs and Discord Nodes to connect to the credentials you have set up. / อัปเดต Node ของ ElevenLabs และ Discord ให้เชื่อมต่อกับ Credentials ที่คุณได้สร้างไว้.
 3.  **Configure Input:** Customize the Trigger or Input Node to pull job description data from your desired source. / ปรับแต่ง Node เริ่มต้นให้ดึงข้อมูลรายละเอียดงานจากแหล่งที่คุณต้องการ.
 4.  **Test Run:** Execute the workflow manually to ensure the audio file is created and successfully sent to Discord. / รัน Workflow ด้วยตนเองเพื่อตรวจสอบว่าไฟล์เสียงถูกสร้างและส่งไปยัง Discord สำเร็จหรือไม่.
@@ -54,4 +54,4 @@ You need to set up the necessary credentials in n8n for external connections: / 
 
 ## 🤝 Support / การสนับสนุน
 
-If you have any questions or need assistance in customizing this workflow, please contact [Your Contact Channel, e.g., email or Discord ID]. / หากมีคำถามหรือต้องการความช่วยเหลือในการปรับแต่ง Workflow นี้ กรุณาติดต่อ [ระบุช่องทางติดต่อของคุณ เช่น อีเมล หรือ Discord ID].
+If you have any questions or need assistance in customizing this workflow, please contact [Your Contact Channel, e.g., email or Discord ID]. / หากมีคำถามหรือต้องการความช่วยเหลือในการปรับแต่ง Workflow นี้ กรุณาติดต่อ [dream.seat1@outlook.com].
