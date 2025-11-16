@@ -1,0 +1,375 @@
+{
+  "name": "runout",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "08d87ee5-a950-4b17-a81a-083fcab10f39",
+              "name": "jobTitle",
+              "value": "= {{ $json.query.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "f844e3eb-eac1-4d70-8402-53f6bf79e947",
+              "name": "us_salary_info",
+              "value": "={{ $json.query.us_salary }}",
+              "type": "string"
+            },
+            {
+              "id": "c2052a74-c1b5-4c78-a89d-4374f981cec0",
+              "name": "th_salary_info",
+              "value": "={{ $json.query.th_salary }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4b0a5c1e-ba79-4d7f-a74b-bcbab63fe055",
+      "name": "getJob",
+      "notesInFlow": true,
+      "notes": "get job from webhook every 10hr"
+    },
+    {
+      "parameters": {
+        "url": "https://api.pexels.com/v1/videos/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "= {{ $json.jobTitle }} working"
+            },
+            {
+              "name": "per_page",
+              "value": "3"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "1Ofwf01FL051TMbxtAdhDiC8oViqfwJVq0qgZHKtpi2BB9AsXlptzOWs"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "2375f1f6-5455-42af-a737-4a11c86eed39",
+      "name": "getVideo",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=คุณคือ Content Creator สาย TikTok ที่ทำคลิปให้คนไทยดู\nเป้าหมาย: เขียนสคริปต์ TikTok (ไม่เกิน 45 วิ) เปรียบเทียบรายได้อาชีพ '{{ $('getJob').item.json.jobTitle }}' ระหว่าง US กับ ไทย ให้คนไทย \"ว้าว\" ที่สุด\n\nข้อมูลดิบ US (ที่คุณป้อนมา):\n- {{ $('getJob').item.json.us_salary_info }}\n\nข้อมูลดิบ TH (ที่คุณป้อนมา):\n- {{ $('getJob').item.json.th_salary_info }}\n\n---\n\n**คำสั่ง (สำคัญที่สุด!):**\n1. อ่านข้อมูลดิบ แล้วดึง \"ตัวเลข\" เงินเดือน US และ TH ที่ชัดเจนที่สุด\n3. เขียนสคริปต์ที่เปรียบเทียบให้เห็นความต่างชัดเจน ใช้ภาษาตื่นเต้น กระแทกใจ\n\n**4. (กฏเหล็ก) ผลลัพธ์ที่ต้องการ:**\n   - ต้องเป็น **\"ข้อความธรรมดา\" (Plain Text)** ย่อหน้าเดียวเท่านั้น\n   - **ห้าม** ใส่ JSON (เช่น `{\"script\": ...}`)\n   - **ห้าม** ใส่ตัวอักษรพิเศษ (เช่น `\\n` หรือ `[` หรือ `]`)\n   - **ห้าม** ใส่คำนำหน้า (เช่น `(Hook)`, `(Body)`, `(CTA)`)\n---\n\n**ตัวอย่างผลลัพธ์ที่ถูกต้อง (ข้อความดิบๆ ที่พร้อมพากย์เสียง):**\nช็อก! รายได้ช่างประปาที่อเมริกา... เค้าได้กันเดือนละ $5,000 (ประมาณ 180,000 บาท!!) แม่เจ้า!! แล้วดูที่ไทย... ช่างประปาทั่วไปได้ประมาณ 18,000 บาท!! ต่างกัน 10 เท่า!! ใครอยากย้ายประเทศบ้าง? คอมเมนต์มาด่วน!!"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "ee1f6b57-ff58-425f-a661-6bbfde18148e",
+      "name": "getScript",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RGSXrTkuMblLblOU",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=✨ TikTok Idea ใหม่มาแล้ว! ✨\nอาชีพ: {{ $('getJob').item.json.jobTitle }}\n\n--- สคริปต์จาก AI ---\n{{ $json.content.parts[0].text }}\n\n--- จบสคริปต์ ---\n\n📹 Video Stock (เอาไปใช้ได้):\n{{ $('getVideo').item.json.videos[0].url }}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        16
+      ],
+      "id": "17cae700-6db7-41fe-aab7-2459c0444d02",
+      "name": "sendDiscord",
+      "webhookId": "15225dd5-9c50-461d-ab06-ed82aa4a7e4b",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "TTjR1xeR7DyM4i1r",
+          "name": "Discord Webhook account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://api.elevenlabs.io/v1/models",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"xi-api-key\": \"77247960b4dfb69d4c8376cb5102c9ed555aacef3f37e594198d5d090c57b55d\",\n  \"Content-Type\": \"application/json\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1632,
+        144
+      ],
+      "id": "1fb77602-b2df-45e6-bac4-6cb30b8e0452",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/TX3LPaxmHKxFdv7VOQHJ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "xi-api-key",
+              "value": "77247960b4dfb69d4c8376cb5102c9ed555aacef3f37e594198d5d090c57b55d"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"text\": {{ $json.content.parts[0].text }},\n    \"model_id\": \"eleven_v3\",\n    \"voice_settings\": {\n        \"stability\": 1,\n        \"similarity_boost\": 1\n    }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "tiktok_audio"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        976,
+        0
+      ],
+      "id": "e2012f3a-233e-41e1-bb97-d7ce85ff591a",
+      "name": "generateAudio",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "binaryPropertyName": "tiktok_audio",
+        "destinationKey": "myAudioFile",
+        "options": {
+          "keepSource": "json"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        -32
+      ],
+      "id": "694608aa-2d28-4ba5-b6e6-26f90d366da8",
+      "name": "extractAudio1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/1438011379742281729/DGcD9TOP4PcRN0Ixpj_g0VRAd8iv_NMXV0L6qLGE6N7q5jF9ZqoaNmWTUH4pf4ZYlL3n",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "tiktok_audio"
+            },
+            {
+              "name": "payload_json",
+              "value": "={{ JSON.stringify({\n  content: `**🧠 genIdea:**\\n**job:** ${$('getJob').item.json.jobTitle}\\n\\n**📝 genScript:**\\n${$json.content.parts[0].text}\\n\\n**📹 genVid:**\\n🔗 ${$('getVideo').item.json.videos[0].url}`\n}) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1200,
+        -144
+      ],
+      "id": "977244b7-9af6-4262-9296-fb3274ccbfb9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "path": "abb72672-0f2e-417b-8682-e7311d0266ef",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "7ddc154a-8cef-4038-9d40-c1f5a34b2f7a",
+      "name": "Webhook",
+      "webhookId": "abb72672-0f2e-417b-8682-e7311d0266ef"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=คุณคือ Content Creator สาย TikTok ที่ทำคลิปให้คนไทยดู\nเป้าหมาย: เขียนสคริปต์ TikTok (ไม่เกิน 45 วิ) เปรียบเทียบรายได้อาชีพ '{{ $('getJob').item.json.jobTitle }}' ระหว่าง US กับ ไทย ให้คนไทย \"ว้าว\" ที่สุด\n\nข้อมูลดิบ US (ที่คุณป้อนมา):\n- {{ $('getJob').item.json.us_salary_info }}\n\nข้อมูลดิบ TH (ที่คุณป้อนมา):\n- {{ $('getJob').item.json.th_salary_info }}\n\nคำสั่ง:\n1. อ่านข้อมูลดิบ แล้วดึง \"ตัวเลข\" เงินเดือน US และ TH ที่ชัดเจนที่สุด\n2. แปลง US เป็นบาท (ใช้ 1 USD = 36 THB) และเน้นตัวเลขที่แปลงแล้ว\n3. เขียนสคริปต์ที่เปรียบเทียบให้เห็นความต่างชัดเจน ใช้ภาษาตื่นเต้น กระแทกใจ\n4. ต้องมี Hook (ประโยคเปิด) ที่หยุดนิ่ง\n5. ต้องมี Call to Action (ชวนคอมเมนต์)\n6. ตอบกลับเป็น \"ข้อความธรรมดา\" เท่านั้น (ไม่ต้องใส่ JSON หรือ Markdown)\n\n\nตัวอย่างสคริปต์:\n(Hook) ตะลึง! เงินเดือนพยาบาลที่เมกา...\n(Body) เค้าได้กันเดือนละ $... (คิดเป็นเงินไทย ... บาท!!) ...\n(Compare) เทียบกับที่ไทย...\n(CTA) คุณว่าคุ้มมั้ย? คอมเมนต์มา!"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        320
+      ],
+      "id": "c4b230f9-9674-4fd8-b5a5-45db72c52005",
+      "name": "getScript1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RGSXrTkuMblLblOU",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "getJob": {
+      "main": [
+        [
+          {
+            "node": "getVideo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getVideo": {
+      "main": [
+        [
+          {
+            "node": "getScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getScript": {
+      "main": [
+        [
+          {
+            "node": "generateAudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generateAudio": {
+      "main": [
+        [
+          {
+            "node": "sendDiscord",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "getJob",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "51355713-71d1-4878-84be-93880d845b96",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "399c5659e1fbf5b1e7182b9c0a9cafe9818e5e75f8a2fc89cec92ff85211534e"
+  },
+  "id": "9KGJrnrk6Pm215Bu",
+  "tags": [
+    {
+      "updatedAt": "2025-11-12T10:11:12.881Z",
+      "createdAt": "2025-11-12T10:11:12.881Z",
+      "id": "fN1AIJngPXypopxp",
+      "name": "part2"
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "name": "jobfinder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 8,
+              "triggerAtMinute": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e8b32d88-dbc0-4de7-92a9-071856b31014",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://lumushaa1.app.n8n.cloud/webhook/abb72672-0f2e-417b-8682-e7311d0266ef",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "jobTitle",
+              "value": "={{ JSON.parse( $('geminijob').item.json.content.parts[0].text.trim() ).job }}"
+            },
+            {
+              "name": "us_salary",
+              "value": "={{ JSON.parse( $('geminijob').item.json.content.parts[0].text.trim() ).us }}"
+            },
+            {
+              "name": "th_salary",
+              "value": "={{ JSON.parse( $('geminijob').item.json.content.parts[0].text.trim() ).th }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "6f680e6a-563d-4e6a-b2be-dbda90c044ef",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=คุณคือผู้ช่วยค้นหาข้อมูล\nหน้าที่ของคุณคือ:\n1. คิดอาชีพที่น่าสนใจ 1 อาชีพ (เช่น ช่างประปา, พยาบาล, นักออกแบบ)\n2. ค้นหาเงินเดือนเฉลี่ย (ต่อเดือน) ของอาชีพนั้นใน \"USA\" (เป็น USD)\n3. ค้นหาเงินเดือนเฉลี่ย (ต่อเดือน) ของอาชีพนั้นใน \"ไทย\" (เป็น THB)\n\n**กฏเหล็ก (สำคัญมาก):**\n- \"บังคับ\" ให้ตอบกลับเป็น \"JSON\" ที่ \"สะอาด\" (Clean JSON) ใน \"บรรทัดเดียว\" เท่านั้น\n- \"ห้าม\" มี \\n หรือคำอธิบายใดๆ หรือ Markdown\n- \"ห้าม\" มีช่องว่าง (Space) ที่ไม่จำเป็น\n\n**ตัวอย่างรูปแบบที่ \"บังคับ\":**\n{\"job\":\"Plumber\",\"us\":\"$5,000 USD\",\"th\":\"18,000 THB\"}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4073d9c9-63a3-4d03-b0dd-e6328d69272f",
+      "name": "geminijob",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RGSXrTkuMblLblOU",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "geminijob",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "geminijob": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "52e80e56-3ba1-4712-b981-cb766e5d6df6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "399c5659e1fbf5b1e7182b9c0a9cafe9818e5e75f8a2fc89cec92ff85211534e"
+  },
+  "id": "n7SQMtWx00bvFPzw",
+  "tags": []
+}
