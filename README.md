@@ -54,4 +54,4 @@ You need to set up the necessary credentials in n8n for external connections: / 
 
 ## 🤝 Support / การสนับสนุน
 
-If you have any questions or need assistance in customizing this workflow, please contact [Your Contact Channel, e.g., email or Discord ID]. / หากมีคำถามหรือต้องการความช่วยเหลือในการปรับแต่ง Workflow นี้ กรุณาติดต่อ [dream.seat1@outlook.com].
+If you have any questions or need assistance in customizing this workflow, please contact [dream.seat1@outlook.com]. / หากมีคำถามหรือต้องการความช่วยเหลือในการปรับแต่ง Workflow นี้ กรุณาติดต่อ [dream.seat1@outlook.com].
